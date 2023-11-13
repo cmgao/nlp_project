@@ -19,13 +19,24 @@ def split_data(input_df):
     datapath = os.getcwd()+'/raw_data/'
 
     with open(datapath+input_df, 'r') as file:
-        lines = file.readlines()  
+        lines = file.readlines()
 
     if input_df == 'cleaned_parallel_sentences.txt':
-        train, test = train_test_split(lines, test_size=0.3, random_state=42)
-        test, valid = train_test_split(test, test_size=0.5, random_state=42)
-        print(f"The data is split into {len(train)} of training sentences, {len(valid)} of validation sentences, and {len(test)} of test sentences.")
+        data = [line.strip().split('|||') for line in lines]
+        df = pd.DataFrame(data, columns=['source','cantonese', 'mandarin'])
+        # cantonese, mandarin = zip(*data)
+        train_idx, test_idx = train_test_split(df.index, test_size=0.3, random_state=42)
+        test_idx, valid_idx = train_test_split(test_idx, test_size=0.5, random_state=42)
         
+        train = df.iloc[train_idx]
+        test = df.iloc[test_idx]
+        valid = df.iloc[valid_idx]
+
+        # print(train.head())
+        # print(test.head())
+        
+        print(f"The data is split into {len(train)} of training sentences, {len(valid)} of validation sentences, and {len(test)} of test sentences.")
+
         # save as text files
         save_to_dir = os.path.join(target_dir)
 
@@ -33,8 +44,15 @@ def split_data(input_df):
         df_to_txt(test, save_to_dir, "test_"+input_df)
         df_to_txt(valid, save_to_dir, "valid_"+input_df)
 
-    elif input_df == 'tatoeba_sentences.csv':
-        test, valid = train_test_split(lines, test_size=0.5, random_state=42)
+    elif input_df == 'tatoeba_sentences.txt':
+        data = [line.strip().split(',', 1) for line in lines]
+        df = pd.DataFrame(data, columns=['cantonese', 'mandarin'])
+
+        test_idx, valid_idx = train_test_split(df.index, test_size=0.5, random_state=42)
+        
+        test = df.iloc[test_idx]
+        valid = df.iloc[valid_idx]
+        print(test.head())
         print(f"The data is split into {len(test)} of testing sentences and {len(valid)} of validation sentences.")
 
         save_to_dir = os.path.join(target_dir)
