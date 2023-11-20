@@ -1,0 +1,3 @@
+[submodule "ALMA"]
+	path = ALMA
+	url = git@github.com:SuperAIdesu/ALMA.git
