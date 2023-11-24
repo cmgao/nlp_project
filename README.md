@@ -37,7 +37,7 @@ Mandarin to Cantonese:
 | Existing work           |               |               |               |                 |
 | 0-shot                  |               |               |               |                 |
 | 5-shot                  |               |               |               |                 |
-| Finetuned               |               |               |               |                 |
+| Finetuned               |   37.738      |               |  28.841       |                 |
 
 Cantonese to Mandarin:
 
