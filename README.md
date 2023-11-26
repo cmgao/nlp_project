@@ -37,7 +37,7 @@ Mandarin to Cantonese:
 | Existing work           |               |               |               |                 |
 | 0-shot                  |               |               |               |                 |
 | 5-shot                  |               |               |               |                 |
-| Finetuned               |   37.738      |               |  28.841       |                 |
+| Finetuned               | 37.738/35.371 | 49.522/44.583 | 28.841/26.197 | 38.884/35.274   |
 
 Cantonese to Mandarin:
 
@@ -47,4 +47,4 @@ Cantonese to Mandarin:
 | Existing work           |               |               |               |                 |
 | 0-shot                  |               |               |               |                 |
 | 5-shot                  |               |               |               |                 |
-| Finetuned               |               |               |               |                 |
+| Finetuned               | 36.469/36.553 | 44.444/47.719 | 27.028/27.471 | 31.874/37.925   |
