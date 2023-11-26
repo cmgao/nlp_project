@@ -43,13 +43,13 @@ def evaluation_driver(input: str | Callable | None, split="val", domain="main", 
     """
     if split == "test":
         if domain == "main":
-            ref = pd.read_csv("data/test_cleaned_parallel_sentences.txt").iloc[:, -2:]
+            ref = pd.read_csv("data/test_cleaned_parallel_sentences.txt", header=None).iloc[:, -2:]
         else:
-            ref = pd.read_csv("data/test_tatoeba_sentences.txt")
+            ref = pd.read_csv("data/test_tatoeba_sentences.txt", header=None)
     elif domain == "main":
-        ref = pd.read_csv("data/valid_cleaned_parallel_sentences.txt").iloc[:, -2:]
+        ref = pd.read_csv("data/valid_cleaned_parallel_sentences.txt", header=None).iloc[:, -2:]
     else:
-        ref = pd.read_csv("data/valid_tatoeba_sentences.txt")
+        ref = pd.read_csv("data/valid_tatoeba_sentences.txt", header=None)
 
     if input is None:
         pred = dummy_pred(ref, target)
