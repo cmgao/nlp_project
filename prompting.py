@@ -97,8 +97,11 @@ def main():
 
             ## for few shot prompting
             if use_few_shot_prompting:
+                prompt_texts = []
                 selected_samples = data.sample(n=5) ## few shot with 5 random drawn sentences
-                prompt_texts = [template_few_shot.format(text, translate) for text, translate in zip(selected_samples[args.input_lang], selected_samples[args.output_lang])]
+                for i, row in selected_samples.iterrows():
+                    prompt_texts.append(template_few_shot.format(text,translate) for text, translate in zip(selected_samples[args.input_lang], selected_samples[args.output_lang]))
+                # prompt_texts = [template_few_shot.format(text, translate) for text, translate in zip(selected_samples[args.input_lang], selected_samples[args.output_lang])]
                 inputs = tokenizer(prompt_texts, return_tensors="pt", padding=True, truncation=True, max_length=512).to('cuda')
             
             ## zero shot
