@@ -23,6 +23,12 @@ poetry lock
 poetry install --no-root
 ```
 
+## ALMA fine-tuning
+
+Code and documentation in the ALMA submodule.
+
+Huggingface: https://huggingface.co/superaidesu/cantonese-alma-2-7b-oasst-v1-lora
+
 ## Evaluation script and results
 
 Use `evaluate.py -h` to see the options. The script takes in a plain text output file, whose rows are the model translations, and output BLEU and ChrF++ scores.
