@@ -2,6 +2,8 @@ import argparse
 import pandas as pd
 from typing import Sequence, Callable
 from sacrebleu.metrics import BLEU, CHRF
+from openai import OpenAI
+from opencc import OpenCC
 
 
 def evaluate(ref: Sequence[str], pred: Sequence[str]) -> dict:
@@ -30,6 +32,41 @@ def dummy_pred(ref: pd.DataFrame, target: str) -> Sequence[str]:
     Use source text as naive baseline.
     """
     return ref.iloc[:, 1].tolist() if target == "yue" else ref.iloc[:, 0].tolist()
+
+
+def pred_gpt(src: Sequence[str], target: str) -> Sequence[str | None]:
+    """
+    Use GPT-3.5 as prediction.
+    """
+
+    client = OpenAI()
+    res = []
+    cc = OpenCC('s2hk')
+
+    prompt = {
+        "cmn": "將下文從廣東話翻譯成中文普通話\n廣東話：",
+        "yue": "將下文從中文普通話翻譯成廣東話\n普通話："
+    }
+
+    suffix = {
+        "cmn": "\n普通話：",
+        "yue": "\n廣東話："
+    }
+
+    for s in src:
+        user_msg = prompt[target] + s + suffix[target]
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant. You are helping in translations between Cantonese and Mandarin."},
+                {"role": "user", "content": user_msg}
+            ]
+        )
+        res_content = cc.convert(response.choices[0].message.content)
+        print(res_content)
+        res.append(res_content)
+
+    return res
 
 
 def evaluation_driver(input: str | Callable | None, split="val", domain="main", target="yue"):
@@ -77,7 +114,9 @@ if __name__ == "__main__":
     parser.add_argument('--input', help='Path to input file (contains predictions)', default=None)
     parser.add_argument("--domain", help='which data source to use (main or tatoeba)', choices=["main", "tatoeba"], required=True)
     parser.add_argument('--target', help='Target language (yue or cmn)', choices=["yue", "cmn"], required=True)
+    parser.add_argument("--gpt", help="Use GPT-3.5 as prediction", action="store_true")
 
     args = parser.parse_args()
 
-    evaluation_driver(args.input, args.split, args.domain, args.target)
+    input = pred_gpt if args.gpt else args.input
+    evaluation_driver(input, args.split, args.domain, args.target)
